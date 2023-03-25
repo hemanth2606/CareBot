@@ -26,6 +26,7 @@ void loadWIFICredentialEEPROM() {
       lv_event_send(settingWiFiSwitch, LV_EVENT_VALUE_CHANGED, NULL);
 
       popupMsgBox("Welcome Back!", "Attempts to reconnect to the previously connected network.");
+      
       ssidName = String(preSSIDName);
       ssidPW = String(preSSIDPw);
       networkConnector();
@@ -67,6 +68,10 @@ static void buildStatusBar() {
   timeLabel = lv_label_create(statusBar);
   lv_obj_set_size(timeLabel, 30, 30);
 
+  bluetooth_Status_label = lv_label_create(statusBar);
+  lv_obj_set_size(bluetooth_Status_label, 30, 30);  
+  lv_obj_align(bluetooth_Status_label, LV_ALIGN_CENTER, 0, 0);
+
   lv_label_set_text(timeLabel, LV_SYMBOL_WARNING);
   lv_obj_align(timeLabel, LV_ALIGN_RIGHT_MID, 0, 10);
 
@@ -78,6 +83,7 @@ static void buildStatusBar() {
   lv_obj_t *label = lv_label_create(settingBtn); /*Add a label to the button*/
   lv_label_set_text(label, LV_SYMBOL_SETTINGS);  /*Set the labels text*/
   lv_obj_center(label);
+
 }
 
 static void btn_event_cb(lv_event_t *e) {
@@ -306,7 +312,6 @@ void beginWIFITask(void *pvParameters) {
     networkStatus = NETWORK_CONNECT_FAILED;
     saveWIFICredentialEEPROM(0, "");
   }
-
   vTaskDelete(NULL);
 }
 
@@ -410,4 +415,12 @@ void updateLocalTime() {
   lv_label_set_text(timeLabel,LV_SYMBOL_WIFI);
   lv_label_set_text(dayOfWeek,dateWithSymbol.c_str());
   lv_label_set_text(date,weekWithSymbol.c_str());
+  if(bleKeyboard.isConnected()) 
+  {
+   lv_label_set_text(bluetooth_Status_label,LV_SYMBOL_BLUETOOTH);
+  }
+  else
+  {
+      lv_label_set_text(bluetooth_Status_label,LV_SYMBOL_WARNING);     
+  }
 }

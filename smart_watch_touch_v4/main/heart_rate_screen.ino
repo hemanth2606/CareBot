@@ -70,7 +70,6 @@ long lastBeat = 0; //Time at which the last beat occurred
 
 float beatsPerMinute;
 int beatAvg;
-
 lv_obj_t *heart_value;
 
 void heart_rate_create_screen()

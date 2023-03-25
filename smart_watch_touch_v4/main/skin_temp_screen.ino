@@ -85,7 +85,7 @@ static void skin_temp_cal_task() {
               NULL,
               1,
               &skinTempHandler,
-              tskNO_AFFINITY);
+              1);
 }
 
 static void skin_temp_cal(void *pvParameters)
@@ -100,13 +100,12 @@ static void skin_temp_cal(void *pvParameters)
   //you may want to turn off the LEDs to avoid any local heating
   particleSensor.setup(0); //Configure sensor. Turn off LEDs
   //particleSensor.setup(); //Configure sensor. Use 25mA for LED drive
-
   particleSensor.enableDIETEMPRDY();
   while(1)
   {
   float Skin_temperature = particleSensor.readTemperature();
   int Skin_value =(int) (Skin_temperature*100);
-  lv_label_set_text_fmt(skin_temp_arc_value, "%d.%2d °C",(int)(Skin_value/100),Skin_value%100);
+  lv_label_set_text_fmt(skin_temp_arc_value, "%d.%2d °C",(int)(Skin_value/100),(int)(Skin_value%100));
   vTaskDelay(1500/portTICK_PERIOD_MS);
   }
 

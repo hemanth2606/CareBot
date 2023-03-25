@@ -3,6 +3,14 @@
 #include "WiFi.h"
 #include <vector>
 
+#include <WiFiClientSecure.h>
+#include <ArduinoJson.h>
+#include "ChatGPT.hpp"
+
+#include "tinyexpr.h"
+
+#include<HTTPClient.h>
+
 #include <Wire.h>
 #include "MAX30105.h"
 #include "heartRate.h"
@@ -10,8 +18,9 @@
 MAX30105 particleSensor;
 #define MAX_BRIGHTNESS 255
 
-#include <ADXL345.h>
-ADXL345 adxl; 
+#include <BleKeyboard.h>
+BleKeyboard bleKeyboard("CareBot","Slealth",100);
+
 
 const char *ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 5.5 * 60 * 60;  // Set your timezone here
@@ -56,6 +65,8 @@ static lv_obj_t *keyboard;
 static lv_obj_t *popupBox;
 static lv_obj_t *popupBoxCloseBtn;
 static lv_timer_t *timer;
+static lv_timer_t *dict_timer;
+
 
 static lv_obj_t *button;
 lv_obj_t *Clock;
@@ -64,6 +75,9 @@ lv_obj_t *date;
 static lv_style_t style_Clock_text;
 lv_obj_t *screen2 ;
 lv_anim_t anim;
+
+static lv_obj_t *bluetooth_Status_label;
+
 lv_obj_t *home_screen;
 lv_obj_t *tv;
 lv_obj_t *activity_screen;
@@ -82,19 +96,21 @@ lv_obj_t *camera_screen;
 lv_obj_t *timer_screen;
 lv_obj_t *weather_screen;
 lv_obj_t *chatGPT_screen;
+lv_obj_t *dictionary_screen;
 
 
 static int foundNetworks = 0;
 unsigned long networkTimeout = 10 * 1000;
 String ssidName, ssidPW;
 
-TaskHandle_t ntScanTaskHandler, ntConnectTaskHandler,heartRateHandler=NULL,spo2Handler=NULL,stepHandler=NULL,skinTempHandler=NULL,stepsHandler=NULL;
+TaskHandle_t ntScanTaskHandler, ntConnectTaskHandler,heartRateHandler=NULL,spo2Handler=NULL,stepHandler=NULL,skinTempHandler=NULL,stepsHandler=NULL,dictionaryHandler=NULL,chatGPTHandler=NULL,weatherHandler=NULL;
 std::vector<String> foundWifiList;
 void gfx_setup();
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin( 115200 );
+  //bleKeyboard.begin();
   gfx_setup();
   loadingScreen();
   move_to_home_screen();
@@ -106,7 +122,3 @@ void loop() {
    lv_timer_handler(); /* let the GUI do its work */
     delay( 5 );
 }
-
-
-
-

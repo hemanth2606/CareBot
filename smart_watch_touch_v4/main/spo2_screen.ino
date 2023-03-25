@@ -94,26 +94,24 @@ static void spo2_cal_task() {
               "spo2_cal",
               4096,
               NULL,
-              2,
+              1,
               &spo2Handler,
               1);
 }
 
 static void spo2_cal(void *pvParameters)
 {
-  pinMode(pulseLED, OUTPUT);
-  pinMode(readLED, OUTPUT);
 
   // Initialize sensor
   if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
   {
-    //error code
-
+    //Serial.println(F("MAX30105 was not found. Please check wiring/power."));
     while (1);
   }
 
-  while (Serial.available() == 0) ; //wait until user presses a key
-  Serial.read();
+  Serial.println(F("Attach sensor to finger with rubber band. Press any key to start conversion"));
+  // while (Serial.available() == 0) ; //wait until user presses a key
+  // Serial.read();
 
   byte ledBrightness = 60; //Options: 0=Off to 255=50mA
   byte sampleAverage = 4; //Options: 1, 2, 4, 8, 16, 32
@@ -121,9 +119,10 @@ static void spo2_cal(void *pvParameters)
   byte sampleRate = 100; //Options: 50, 100, 200, 400, 800, 1000, 1600, 3200
   int pulseWidth = 411; //Options: 69, 118, 215, 411
   int adcRange = 4096; //Options: 2048, 4096, 8192, 16384
-  particleSensor.setup(ledBrightness, sampleAverage, ledMode, sampleRate, pulseWidth, adcRange); //Configure sensor with these settings
 
+  particleSensor.setup(ledBrightness, sampleAverage, ledMode, sampleRate, pulseWidth, adcRange); 
 
+while(1){
     bufferLength = 100; //buffer length of 100 stores 4 seconds of samples running at 25sps
 
   //read the first 100 samples, and determine the signal range
@@ -184,9 +183,12 @@ static void spo2_cal(void *pvParameters)
 
       // Serial.print(F(", SPO2Valid="));
       //println(validSPO2, DEC);
-      lv_label_set_text_fmt(spo2_arc_value, "%d",validSPO2);
+      if(validSPO2==1){
+      lv_label_set_text_fmt(spo2_arc_value, "%d%%",spo2);
+      }
     }
     //After gathering 25 new samples recalculate HR and SP02
      maxim_heart_rate_and_oxygen_saturation(irBuffer, bufferLength, redBuffer, &spo2, &validSPO2, &heartRate, &validHeartRate);
   }
+}
 }

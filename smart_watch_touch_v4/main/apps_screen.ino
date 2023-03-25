@@ -154,6 +154,15 @@ void app_icon_create()
       lv_obj_align(chatGPT_img, LV_ALIGN_CENTER, 0, 0);
       lv_obj_add_event_cb(chatGPT_button, chatGPT_event_cb, LV_EVENT_CLICKED, NULL);
 
+      lv_obj_t *dictionary_button = lv_btn_create(app_flex);
+      lv_obj_set_size(dictionary_button, 70, 70);
+      lv_obj_t *dictionary_img = lv_img_create(dictionary_button);
+      lv_img_set_src(dictionary_img, my_icons[11]);
+      lv_obj_set_style_img_recolor_opa(dictionary_img, 255, 0);
+      lv_obj_set_style_img_recolor(dictionary_img,lv_color_make(255,255,255),0);
+      lv_obj_align(dictionary_img, LV_ALIGN_CENTER, 0, 0);
+      lv_obj_add_event_cb(dictionary_button, dictionary_event_cb, LV_EVENT_CLICKED, NULL);
+
       
 }
 static void steps_event_cb(lv_event_t* e)
@@ -238,6 +247,13 @@ static void chatGPT_event_cb(lv_event_t* e)
    lv_event_code_t code = lv_event_get_code(e);
     if(code == LV_EVENT_CLICKED) {
       chatGPT_create_screen();
+    }
+}
+static void dictionary_event_cb(lv_event_t* e)
+{
+   lv_event_code_t code = lv_event_get_code(e);
+    if(code == LV_EVENT_CLICKED) {
+      dictionary_create_screen();
     }
 }
 

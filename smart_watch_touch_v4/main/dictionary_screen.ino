@@ -92,7 +92,7 @@ void dictionary_cal(void *pvParameters)
 {
   
        HTTPClient http;
-      http.begin("https://api.dictionaryapi.dev/api/v2/entries/en/" + String(lv_textarea_get_text(dictionary_text_box)));
+      http.begin("enter u r api" + String(lv_textarea_get_text(dictionary_text_box)));
       int httpcode = http.GET();
       if(httpcode > 0 && httpcode == HTTP_CODE_OK)
       {

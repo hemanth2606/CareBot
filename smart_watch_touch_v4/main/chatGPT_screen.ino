@@ -36,7 +36,7 @@ const char *test_root_ca =
   "-----END CERTIFICATE-----\n";
 
 WiFiClientSecure chatGPT_client;
-ChatGPT<WiFiClientSecure> chat_gpt(&chatGPT_client, "v1", "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");
+ChatGPT<WiFiClientSecure> chat_gpt(&chatGPT_client, "v1", "enter your API key");
 
 void chatGPT_create_screen()
 {

@@ -37,7 +37,7 @@ void weather_back_event_cb(lv_event_t* e)
 // void weather_cal(){
 
 //     HTTPClient http;
-//     http.begin("https://api.openweathermap.org/data/2.5/weather?q=bengaluru&appid=73b8dbdabd44cd4c27a2c264beb435f0");
+//     http.begin("enter your api");
 //     int httpcode = http.GET();
 //     if(httpcode > 0 && httpcode == HTTP_CODE_OK ){
 //         String payload = http.getString();
